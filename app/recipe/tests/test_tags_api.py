@@ -57,7 +57,7 @@ class PrivateTagsApiTests(TestCase):
 
 		Tag.objects.create(user=self.user, name="Vegan")
 		Tag.objects.create(user=self.user, name="Dessert")
-		Tag.objects.create(user=user2, name="Python")
+		Tag.objects.create(user=user2, name="Menudo")
 
 		tags = Tag.objects.filter(user=self.user).order_by("-name")
 		serializer = TagSerializer(tags, many=True)
@@ -69,7 +69,7 @@ class PrivateTagsApiTests(TestCase):
 
 	def test_create_tags_success(self):
 		payload = {'name': 'Vegan'}
-		self.client.post(TAGS_URL, payload)
+		res = self.client.post(TAGS_URL, payload)
 
 		is_exists = Tag.objects.filter(
 				user=self.user, 
@@ -78,9 +78,7 @@ class PrivateTagsApiTests(TestCase):
 
 		self.assertTrue(is_exists)
 
-		#res = self.client.post(TAGS_URL, payload)
-
-		#self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+		self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
 
 	def test_invalid_tag(self):
