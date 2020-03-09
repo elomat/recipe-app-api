@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 
 from core.models import Tag
 from core.models import Ingredient
+from core.models import Recipe
 
 def sample_user(email='test@test.com', password='password1234'):
 	return get_user_model().objects.create_user(email, password)
@@ -57,3 +58,14 @@ class ModelTests(TestCase):
 			)
 
 		self.assertEqual(str(ingredient), ingredient.name)
+
+	def test_recipe_srt(self):
+		recipe = Recipe.objects.create(
+				user=sample_user(),
+				title='Title',
+				time_minutes=5,
+				price=5.00
+			)
+
+		self.assertEqual(str(recipe), recipe.title)
+
