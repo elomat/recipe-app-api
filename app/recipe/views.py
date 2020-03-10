@@ -3,7 +3,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from core.models import Tag, Ingredient, Recipe
-from recipe.serializers import TagSerializer, IngredientSerializer, RecipeSerializer
+from recipe.serializers import IngredientSerializer, RecipeSerializer, RecipeDetailSerializer, TagSerializer
 
 
 class BaseRecipeViewSet(viewsets.GenericViewSet,
@@ -38,3 +38,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
 	def get_queryset(self):
 		return self.queryset.filter(user=self.request.user).order_by("-id")
+
+	def get_serializer_class(self):
+		if self.action == 'retrieve':
+			return RecipeDetailSerializer
+
+		return self.serializer_class
+
+	def perform_create(self, serializer):
+		serializer.save(user=self.request.user)
