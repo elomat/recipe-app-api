@@ -1,3 +1,4 @@
+from unittest.mock import 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
@@ -68,4 +69,9 @@ class ModelTests(TestCase):
 			)
 
 		self.assertEqual(str(recipe), recipe.title)
+
+
+	@patch('uuid.uuid4')
+	def test_recipe_file_name_uuid(self, mock_uuid):
+		
 

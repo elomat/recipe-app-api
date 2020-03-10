@@ -70,6 +70,7 @@ class Recipe(models.Model):
 	link = models.CharField(max_length=255, blank=True)
 	ingredients = models.ManyToManyField('Ingredient')
 	tags = models.ManyToManyField('Tag')
+	photo = models.ImageField(blank=True)
 	
 
 	def __str__(self):
