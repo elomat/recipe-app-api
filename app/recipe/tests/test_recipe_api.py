@@ -169,6 +169,58 @@ class PrivateTestRecipeApi(TestCase):
 		self.assertIn(ingredient2, ingredients)
 
 
+	def test_partial_update_recipe(self):
+		recipe = sample_recipe(user=self.user)
+		recipe.tags.add(sample_tag(user=self.user))
+
+		new_tag = sample_tag(user=self.user, name='Bake')
+
+		payload = {
+				'title': 'Baked Mac',
+				'tags': [new_tag.id]
+		}
+
+		url = detail_url(recipe.id)
+
+		res = self.client.patch(url, payload)
+
+		recipe.refresh_from_db()
+
+		self.assertEqual(recipe.title, payload['title'])
+
+		tags = recipe.tags.all()
+
+		self.assertEqual(len(tags), 1)
+		self.assertIn(new_tag, tags)
+
+	def test_full_update_recipe(self):
+		recipe = sample_recipe(user=self.user)
+		recipe.tags.add(sample_tag(user=self.user))
+		recipe.ingredients.add(sample_ingredient(user=self.user))
+
+		#new_ingredient = sample_ingredient(user=self.user, name='Cesarian')
+
+		payload = {
+					'title': 'Caesarian Salad',
+					'time_minutes': 10,
+					'price': 20.00,
+					#'ingredients': [new_ingredient.id]
+				}
+
+		url = detail_url(recipe.id)
+
+		self.client.put(url, payload)
+		recipe.refresh_from_db()
+		tags = recipe.tags.all()
+		ingredients = recipe.ingredients.all()
+
+		for key in payload.keys():
+			self.assertEqual(payload[key], getattr(recipe, key))
+
+		self.assertEqual(len(tags), 0)
+		self.assertEqual(len(ingredients), 0)
+		#self.assertIn(new_ingredient.id, ingredients)
+
 
 
 
